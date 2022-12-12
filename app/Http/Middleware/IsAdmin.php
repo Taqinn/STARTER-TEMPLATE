@@ -16,9 +16,9 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->roles_id == 1){
-            return $next($request);
-        }
-        return redirect('home')->with('error','anda tidak memiliki akses sebaai admin');
+        if (auth()->user()->roles_id == 1){ 
+        return $next($request);
     }
+    return redirect('home')->with('error', 'Anda Tidak Memiliki akses sebagai sebagai admin');
+}
 }

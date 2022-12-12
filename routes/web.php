@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,15 +19,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/test', function () {  
-    // return $user = Auth::user();
-    // return Auth::id();
-// });
-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/test', [App\Http\Controllers\HomeController::class, 'test'])->name('test')->middleware('auth');
 
 Auth::routes();
 
@@ -33,4 +29,34 @@ Route::get('/home', function() {
     return view('home');
 })->name('home')->middleware('auth');
 
-Route::get('admin/home',[App\Http\Controllers\AdminController::class, 'index'])->name('admin.home')->middleware('is_admin');
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::controller(AdminController::class)->group(function (){
+
+    Route::get('admin/home', [AdminController::class, 'index'])->name('admin.home')
+                                                                ->middleware('is_admin');
+    
+    Route::get('admin/books', 'books')->name('admin.books')
+                                        ->middleware('is_admin');
+    Route::post('admin/books', 'submit_book')->name('admin.book.submit')
+                                                ->middleware('is_admin');
+    Route::patch('admin/books/update', 'update_book')->name('admin.book.update')
+                                                        ->middleware('is_admin');
+    Route::get('admin/ajaxadmin/dataBuku/{id}', 'getDataBuku');
+    
+    Route::delete('admin/books/delete/{id}', 'delete_book')->name('admin.book.delete')
+                                                            ->middleware('is_admin');
+                                                                    
+    Route::get('admin/print_books', 'print_books')->name('admin.print.books')
+                                                    ->middleware('is_admin');
+    
+    Route::get('admin/books/export', 'export')->name('admin.book.export')
+                                                ->middleware('is_admin');
+    
+    Route::post('admin/books/import', 'import')->name('admin.book.import')
+                                                ->middleware('is_admin');
+});
+
+                                                                
